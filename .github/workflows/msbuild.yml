@@ -46,9 +46,9 @@ jobs:
         cache: true
 
     - name: Cache Boost
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
-        path: '${{ runner.workspace }}/boost_*.tar.gz'
+        path: 'boost_*.tar.gz'
         key: 'boost-1.70.0'
 
     - name: Build Boost
@@ -60,12 +60,6 @@ jobs:
         platform: x86
         configuration: Release
         toolset: msvc
-
-     - name: Show paths
-       run: |
-         echo 'Boost has been unpacked to: ${{ steps.boost.outputs.root }}'
-         echo 'Libraries can be found here: ${{ steps.boost.outputs.librarydir }}'
-       shell: cmd
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
