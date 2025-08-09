@@ -45,7 +45,7 @@ jobs:
       uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
-        pkgs: boost-conversion:x86-windows@1.70.0 boost-program-options:x86-windows@1.70.0 boost-uuid:x86-windows@1.70.0
+        manifest-dir: ${{ github.workspace }}
         triplet: x86-windows
         token: ${{ github.token }}
 

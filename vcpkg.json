@@ -1,0 +1,7 @@
+{
+  "dependencies": [
+    "boost-conversion",
+    "boost-program-options",
+    "boost-uuid"
+  ]
+}
