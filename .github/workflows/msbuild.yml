@@ -46,9 +46,18 @@ jobs:
         cache: true
 
     - name: Install boost
-      uses: crazy-max/ghaction-chocolatey@v3
+      uses: johnwason/vcpkg-action@v7
+      id: vcpkg
       with:
-        args: install boost-msvc-14.3
+        pkgs: boost-conversion boost-program-options
+        triplet: x86-windows-release
+        token: ${{ github.token }}
+
+    - name: Show boost
+      run: dir ${{ github.workspace }}/vcpkg/installed
+
+    - name: Show boost
+      run: dir ${{ github.workspace }}/vcpkg/installed/x86-windows-release
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
