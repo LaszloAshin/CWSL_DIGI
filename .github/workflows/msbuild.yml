@@ -45,6 +45,11 @@ jobs:
         version: '5.14.2'
         cache: true
 
+    - name: Install boost
+      uses: crazy-max/ghaction-chocolatey@v3
+      with:
+        args: install boost-msvc-14.3
+
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
