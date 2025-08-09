@@ -48,9 +48,20 @@ jobs:
     - name: list qt includes
       run: dir ${{env.QT_ROOT_DIR}}\include
 
+    - name: Create MSBuild props for extra include paths
+      run: |
+        echo ^<Project^> > MyIncludes.props
+        echo   ^<ItemDefinitionGroup^> >> MyIncludes.props
+        echo     ^<ClCompile^> >> MyIncludes.props
+        echo       ^<AdditionalIncludeDirectories^>${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore;%%(AdditionalIncludeDirectories)^</AdditionalIncludeDirectories^> >> MyIncludes.props
+        echo     ^</ClCompile^> >> MyIncludes.props
+        echo   ^</ItemDefinitionGroup^> >> MyIncludes.props
+        echo ^</Project^> >> MyIncludes.props
+      shell: cmd
+
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:AdditionalIncludeDirectories"=${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore;%(AdditionalIncludeDirectories)" ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:ForceImportBeforeCppTargets=MyIncludes.props ${{env.SOLUTION_FILE_PATH}}
       shell: cmd
