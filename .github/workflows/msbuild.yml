@@ -46,7 +46,7 @@ jobs:
         archives: 'qtbase'
 
     - name: list qt includes
-	  run: dir "${{env.QT_ROOT_DIR}}\include"
+      run: dir "${{env.QT_ROOT_DIR}}\include"
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
