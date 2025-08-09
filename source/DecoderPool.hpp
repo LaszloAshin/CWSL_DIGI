@@ -37,9 +37,9 @@ along with CWSL_DIGI. If not, see < https://www.gnu.org/licenses/>.
 #include "OutputHandler.hpp"
 #include "WaveFile.hpp"
 
-#include "QtCore\qsharedmemory.h"
+#include <QSharedMemory>
 
-#include "decodedtext.h"
+//#include "decodedtext.h"
 
 #define NSMAX 6827
 #define NTMAX 30*60

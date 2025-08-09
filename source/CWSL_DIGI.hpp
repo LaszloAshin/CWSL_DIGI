@@ -33,10 +33,12 @@ along with CWSL_DIGI. If not, see < https://www.gnu.org/licenses/>.
 
 #include "CWSL_DIGI_Types.hpp"
 
+#ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "windows.h"
 # pragma comment(lib, "ws2_32")
+#endif
 
 static const std::string PROGRAM_NAME = "CWSL_DIGI";
 static const std::string PROGRAM_VERSION = "0.88";

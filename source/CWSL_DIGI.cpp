@@ -24,7 +24,6 @@ along with CWSL_DIGI.If not, see < https://www.gnu.org/licenses/>.
 
 // stdio and conio used for _kbhit() and _getch()
 #include <stdio.h>
-#include <conio.h>
 
 #include <tuple>
 #include <iostream>
@@ -50,7 +49,9 @@ along with CWSL_DIGI.If not, see < https://www.gnu.org/licenses/>.
 std::atomic_bool syncThreadTerminateFlag = false;
 
 #include "CWSL_DIGI.hpp"
+#ifdef _WIN32
 #include "mmreg.h"
+#endif
 
 #include "OutputHandler.hpp"
 #include "Instance.hpp"
@@ -68,6 +69,8 @@ std::atomic_bool syncThreadTerminateFlag = false;
 #include "Decoder.hpp"
 
 #include "SharedMemory.h"
+
+#include <QDir>
 
 std::string badMessageLogFile = "";
 
@@ -262,14 +265,14 @@ static inline void waitForTimeFT8(std::shared_ptr<ScreenPrinter> printer, std::v
 }
 
 static inline void waitForTime1800(std::shared_ptr<ScreenPrinter> printer, std::vector<std::shared_ptr<SyncPredicate>>& preds) {
-    SYSTEMTIME time;
     bool go = false;
     while (!syncThreadTerminateFlag) {
         try {
-            GetSystemTime(&time);
-            const std::uint16_t min = static_cast<std::uint16_t>(time.wMinute);
+            std::time_t t = std::time(nullptr);
+            tm* ts = std::gmtime(&t);
+            const std::uint16_t min = static_cast<std::uint16_t>(ts->tm_min);
             const bool minFlag = min % 30 == 0;
-            const bool secFlag = time.wSecond == 0;
+            const bool secFlag = ts->tm_sec == 0;
             if (minFlag && secFlag && go) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
                 continue;
@@ -281,7 +284,7 @@ static inline void waitForTime1800(std::shared_ptr<ScreenPrinter> printer, std::
                     preds[k]->store(true);
                 }
             } //if
-            else if (minFlag || (!minFlag && time.wSecond <= 55)) {
+            else if (minFlag || (!minFlag && ts->tm_sec <= 55)) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
             }
             else {
@@ -296,14 +299,14 @@ static inline void waitForTime1800(std::shared_ptr<ScreenPrinter> printer, std::
 }
 
 static inline void waitForTime900(std::shared_ptr<ScreenPrinter> printer, std::vector<std::shared_ptr<SyncPredicate>>& preds) {
-    SYSTEMTIME time;
     bool go = false;
     while (!syncThreadTerminateFlag) {
         try {
-            GetSystemTime(&time);
-            const std::uint16_t min = static_cast<std::uint16_t>(time.wMinute);
+            std::time_t t = std::time(nullptr);
+            tm* ts = std::gmtime(&t);
+            const std::uint16_t min = static_cast<std::uint16_t>(ts->tm_min);
             const bool minFlag = min % 15 == 0;
-            const bool secFlag = time.wSecond == 0;
+            const bool secFlag = ts->tm_sec == 0;
             if (minFlag && secFlag && go) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
                 continue;
@@ -315,7 +318,7 @@ static inline void waitForTime900(std::shared_ptr<ScreenPrinter> printer, std::v
                     preds[k]->store(true);
                 }
             } //if
-            else if (minFlag || (!minFlag && time.wSecond <= 55)) {
+            else if (minFlag || (!minFlag && ts->tm_sec <= 55)) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
             }
             else {
@@ -330,14 +333,14 @@ static inline void waitForTime900(std::shared_ptr<ScreenPrinter> printer, std::v
 }
 
 static inline void waitForTime300(std::shared_ptr<ScreenPrinter> printer, std::vector<std::shared_ptr<SyncPredicate>>& preds) {
-    SYSTEMTIME time;
     bool go = false;
     while (!syncThreadTerminateFlag) {
         try {
-            GetSystemTime(&time);
-            const std::uint16_t min = static_cast<std::uint16_t>(time.wMinute);
+            std::time_t t = std::time(nullptr);
+            tm* ts = std::gmtime(&t);
+            const std::uint16_t min = static_cast<std::uint16_t>(ts->tm_min);
             const bool minFlag = min % 5 == 0;
-            const bool secFlag = time.wSecond == 0;
+            const bool secFlag = ts->tm_sec == 0;
             if (minFlag && secFlag && go) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
                 continue;
@@ -349,7 +352,7 @@ static inline void waitForTime300(std::shared_ptr<ScreenPrinter> printer, std::v
                     preds[k]->store(true);
                 }
             } //if
-            else if (minFlag || (!minFlag && time.wSecond <= 55)) {
+            else if (minFlag || (!minFlag && ts->tm_sec <= 55)) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
             }
             else {
@@ -365,14 +368,14 @@ static inline void waitForTime300(std::shared_ptr<ScreenPrinter> printer, std::v
 
 
 static inline void waitForTime120(std::shared_ptr<ScreenPrinter> printer, std::vector<std::shared_ptr<SyncPredicate>>& preds) {
-    SYSTEMTIME time;
     bool go = false;
     while (!syncThreadTerminateFlag) {
         try {
-            GetSystemTime(&time);
-            const std::uint16_t min = static_cast<std::uint16_t>(time.wMinute);
+            std::time_t t = std::time(nullptr);
+            tm* ts = std::gmtime(&t);
+            const std::uint16_t min = static_cast<std::uint16_t>(ts->tm_min);
             const bool minFlag = (min & 1) == 0;
-            const bool secFlag = time.wSecond == 0;
+            const bool secFlag = ts->tm_sec == 0;
             if (minFlag && secFlag && go) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
                 continue;
@@ -384,7 +387,7 @@ static inline void waitForTime120(std::shared_ptr<ScreenPrinter> printer, std::v
                     preds[k]->store(true);
                 }
             } //if
-            else if (minFlag || (!minFlag && time.wSecond <= 55)) {
+            else if (minFlag || (!minFlag && ts->tm_sec <= 55)) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(MAX_SLEEP_MS));
             }
             else {
@@ -590,9 +593,13 @@ int main(int argc, char **argv)
         cfgFilePath = appdataStr + "\\CWSL_DIGI\\config.ini";
         std::cout << "Looking for config file: " << cfgFilePath << std::endl;
         if (!doesFileExist(cfgFilePath)) {
+#ifdef _WIN32
             char myPath[_MAX_PATH + 1];
             GetModuleFileName(NULL, myPath, _MAX_PATH);
             cfgFilePath = std::string(myPath);
+#else
+            cfgFilePath = ".\\";
+#endif
             const auto idx = cfgFilePath.find_last_of('\\');
             if (idx != std::string::npos){
                 cfgFilePath = cfgFilePath.substr(0,idx);
@@ -900,10 +907,7 @@ int main(int argc, char **argv)
         wavPath = vm["wsjtx.temppath"].as<std::string>();
     }
     else {
-        char buf[MAX_PATH] = {0};
-        GetTempPathA(MAX_PATH, buf);
-        std::string s(buf);
-        wavPath = buf;
+        wavPath = QDir::tempPath().toStdString();
     }
     printer->print("Using path for wav files: " + wavPath);
 
@@ -1188,7 +1192,14 @@ int main(int argc, char **argv)
     }
 
     std::thread statsThread = std::thread(&reportStats, std::ref(statsHandler), printer, std::ref(decoders), statsReportingInterval);
+#ifdef _WIN32
     SetThreadPriority(statsThread.native_handle(), THREAD_PRIORITY_IDLE);
+#else
+    sched_param sp {
+        .sched_priority = 0
+    };
+    pthread_setschedparam(statsThread.native_handle(), SCHED_IDLE, &sp);
+#endif
     statsThread.detach();
 
     //
