@@ -49,7 +49,7 @@ jobs:
       uses: johnwason/vcpkg-action@v7
       id: vcpkg
       with:
-        pkgs: boost-conversion boost-program-options
+        pkgs: boost-conversion boost-program-options boost-uuid
         triplet: x86-windows
         token: ${{ github.token }}
 
