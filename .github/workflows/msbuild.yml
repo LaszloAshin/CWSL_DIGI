@@ -50,14 +50,14 @@ jobs:
       id: vcpkg
       with:
         pkgs: boost-conversion boost-program-options
-        triplet: x86-windows-release
+        triplet: x86-windows
         token: ${{ github.token }}
 
     - name: Show boost
       run: dir ${{ github.workspace }}/vcpkg/installed
 
     - name: Show boost
-      run: dir ${{ github.workspace }}/vcpkg/installed/x86-windows-release
+      run: dir ${{ github.workspace }}/vcpkg/installed/x86-windows
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
