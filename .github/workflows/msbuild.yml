@@ -51,7 +51,7 @@ jobs:
     - name: Create MSBuild props for extra include paths
       run: |
         echo ^<Project^> > MyIncludes.props
-        echo   ^<ItemDefinitionGroup^> >> MyIncludes.props
+        echo   ^<ItemDefinitionGroup Condition="'$$(Configuration)|$$(Platform)'=='${{env.BUILD_CONFIGURATION}}|Win32'"^> >> MyIncludes.props
         echo     ^<ClCompile^> >> MyIncludes.props
         echo       ^<AdditionalIncludeDirectories^>${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore;%%(AdditionalIncludeDirectories)^</AdditionalIncludeDirectories^> >> MyIncludes.props
         echo     ^</ClCompile^> >> MyIncludes.props
