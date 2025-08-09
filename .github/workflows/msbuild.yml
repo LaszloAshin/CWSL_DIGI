@@ -45,25 +45,9 @@ jobs:
         version: '5.14.2'
         cache: true
 
-    - name: Cache Boost
-      uses: actions/cache@v4
-      with:
-        path: 'boost_*.tar.gz'
-        key: 'boost-1.70.0'
-
-    - name: Build Boost
-      id: boost
-      uses: egor-tensin/build-boost@v1
-      with:
-        version: 1.70.0
-        libraries: program_options conversion
-        platform: x86
-        configuration: Release
-        toolset: msvc
-
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:IncludePath="${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore;${{steps.boost.outputs.root}}\include" ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:IncludePath="${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore" ${{env.SOLUTION_FILE_PATH}}
       shell: cmd
