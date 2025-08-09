@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\js8call_source\decodedtext.cpp" />
-    <ClCompile Include="..\..\js8call_source\jsc.cpp" />
-    <ClCompile Include="..\..\js8call_source\varicode.cpp" />
+    <ClCompile Include="..\js8call_source\decodedtext.cpp" />
+    <ClCompile Include="..\js8call_source\jsc.cpp" />
+    <ClCompile Include="..\js8call_source\varicode.cpp" />
     <ClCompile Include="CWSL_DIGI.cpp" />
     <ClCompile Include="Decoder.cpp" />
     <ClCompile Include="Instance.cpp" />
@@ -31,9 +31,9 @@
     <ClCompile Include="WSPRNet.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\js8call_source\decodedtext.h" />
-    <ClInclude Include="..\..\js8call_source\jsc.h" />
-    <ClInclude Include="..\..\js8call_source\varicode.h" />
+    <ClInclude Include="..\js8call_source\decodedtext.h" />
+    <ClInclude Include="..\js8call_source\jsc.h" />
+    <ClInclude Include="..\js8call_source\varicode.h" />
     <ClInclude Include="CWSL_DIGI.hpp" />
     <ClInclude Include="CWSL_DIGI_Types.hpp" />
     <ClInclude Include="CWSL_Utils.hpp" />
