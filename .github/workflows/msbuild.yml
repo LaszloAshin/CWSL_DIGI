@@ -59,6 +59,9 @@ jobs:
         echo ^</Project^> >> MyIncludes.props
       shell: cmd
 
+    - name: show props file
+      run: type MyIncludes.props
+
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
