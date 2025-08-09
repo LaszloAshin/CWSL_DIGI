@@ -43,7 +43,7 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         version: '5.14.2'
-		cache: true
+        cache: true
 
     - name: list qt includes
       run: dir ${{env.QT_ROOT_DIR}}\include
