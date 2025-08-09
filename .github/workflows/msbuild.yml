@@ -43,12 +43,12 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         version: '5.14.2'
-        archives: 'qtbase'
+
+    - name: list qt includes
+      run: dir ${{env.QT_ROOT_DIR}}\include
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} "/p:AdditionalIncludeDirectories=${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore" ${{env.SOLUTION_FILE_PATH}}
-      env:
-        AdditionalIncludeDirectories: ${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:IncludePath=${{env.QT_ROOT_DIR}}\include /p:IncludePath=${{env.QT_ROOT_DIR}}\include\QtCore ${{env.SOLUTION_FILE_PATH}}
