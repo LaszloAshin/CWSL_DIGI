@@ -1,0 +1,66 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: MSBuild
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: source/CWSL_DIGI.vcxproj
+
+  # Configuration type to build.
+  # You can convert this to a build matrix if you need coverage of multiple configuration types.
+  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  BUILD_CONFIGURATION: Release
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '5.14.2'
+        cache: true
+
+    - name: Install boost
+      uses: johnwason/vcpkg-action@v7
+      id: vcpkg
+      with:
+        manifest-dir: ${{ github.workspace }}
+        triplet: x86-windows
+        token: ${{ github.token }}
+
+    - name: Show boost
+      run: dir ${{ github.workspace }}/vcpkg/installed
+
+    - name: Show boost
+      run: dir ${{ github.workspace }}/vcpkg/installed/x86-windows/include
+
+    - name: Show boost
+      run: dir ${{ github.workspace }}/vcpkg/installed/x86-windows/include/boost
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:IncludePath="${{env.QT_ROOT_DIR}}\include;${{env.QT_ROOT_DIR}}\include\QtCore;${{github.workspace}}/vcpkg/installed/x86-windows/include" ${{env.SOLUTION_FILE_PATH}}
+      shell: cmd
